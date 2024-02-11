@@ -1,10 +1,10 @@
-# Import necessary modules
 import os
 import random
 import re
 import pandas as pd
 from psychopy import core, event, visual, data, logging
 import sqlite3
+import numpy as np  # Import numpy for statistical calculations
 
 # Function to load images from a directory
 def load_images(directory, pattern=".*\.(jpg|JPG|jpeg|JPEG|png|PNG)$", num_images=10):
@@ -16,24 +16,36 @@ def load_images(directory, pattern=".*\.(jpg|JPG|jpeg|JPEG|png|PNG)$", num_image
 # Function to display images and record responses
 def run_experiment(win, images, duration=1.0):
     results = []
+    clock = core.Clock()  # Use a clock to measure reaction times
     for image in images:
         img = visual.ImageStim(win, image=os.path.join('./images', image))
         img.draw()
         win.flip()
-        core.wait(duration)
-        # Placeholder for recognition test (e.g., asking to recall or recognize the image)
-        # Here, you could implement a mechanism to record user responses and reaction times
+        core.wait(duration)  # Display the image for the specified duration
+        clock.reset()  # Reset the clock to 0 before waiting for a response
+        keys = event.waitKeys(timeStamped=clock)
+        response_time = keys[0][1] if keys else None  # Record the reaction time
+        # Placeholder for actual response data and observational error computation
+        results.append({'image': image, 'response_time': response_time, 'response': None, 'error_score': None})
     win.flip()
     core.wait(0.5)
-    # Return the collected data for further processing
     return results
 
 # Function to generate and export statistical summaries to SQL
 def export_results_to_sql(results, db_path='experiment_results.sql'):
     conn = sqlite3.connect(db_path)
-    # Assuming 'results' is a list of dictionaries, convert it to a DataFrame first
+    # Convert results to a DataFrame
     df = pd.DataFrame(results)
+    # Generate statistical summaries
+    summary = {
+        'mean_response_time': df['response_time'].mean(),
+        'std_response_time': df['response_time'].std(),
+        # Add other statistical summaries as needed
+    }
+    summary_df = pd.DataFrame([summary])
+    # Export both detailed results and summaries to SQL
     df.to_sql('experiment_data', conn, if_exists='replace', index=False)
+    summary_df.to_sql('experiment_summary', conn, if_exists='replace', index=False)
     conn.close()
 
 def main():
