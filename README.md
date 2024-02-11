@@ -12,7 +12,7 @@ SQLite3 library (for SQL file export)
 A directory named images in the same folder as the script, containing the images to be used in the experiment.
 
 Customizing the Image Series: To adjust the quantity of images shown, edit the num_images variable in the script. This determines how many images are randomly selected from the images directory for the experiment.\
-Running the Experiment: Execute the script in a terminal or command prompt. Follow the on-screen instructions to proceed through the experiment phases.\
+Running the Experiment: Execute the script in a terminal or command prompt. [python PSY4219FinalProject.py] Follow the on-screen instructions to proceed through the experiment phases.\
 Interacting During the Experiment: Press the space bar to advance through introductory and instructional screens. Respond to image recognition prompts as instructed on the screen.\
 Viewing Results: Upon completion, the experiment's statistical summaries are automatically saved to an SQL file in the script's directory. This file can be imported into database management tools or Python for visualization and further analysis.\
 Study Phase: The script first displays a series of images to the participant. The number of images shown can be customized via the script's parameters.\
