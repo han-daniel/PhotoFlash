@@ -11,13 +11,14 @@ def load_images(directory, pattern=".*\.(jpg|JPG|jpeg|JPEG|png|PNG)$", num_image
     all_files = os.listdir(directory)
     image_files = [f for f in all_files if re.match(pattern, f)]
     selected_images = random.sample(image_files, min(num_images, len(image_files)))
-    return selected_images
+    for image in selected_images:
+        yield image
 
 # Function to display images and record responses
-def run_experiment(win, images, duration=1.0):
+def run_experiment(win, image_generator, duration=1.0):
     results = []
-    clock = core.Clock()  # Use a clock to measure reaction times
-    for image in images:
+    clock = core.Clock()
+    for image in image_generator:
         img = visual.ImageStim(win, image=os.path.join('./images', image))
         img.draw()
         win.flip()
